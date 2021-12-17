@@ -5,20 +5,20 @@ require_relative "lib/ruby/vies/version"
 Gem::Specification.new do |spec|
   spec.name          = "ruby-vies"
   spec.version       = Ruby::Vies::VERSION
-  spec.authors       = ["eddygarcas"]
-  spec.email         = ["eduard@rzilient.club","edugarcas@gmail.com"]
+  spec.authors       = ["Eduard Garcia Castelló"]
+  spec.email         = %w[edugarcas@gmail.com eduard@rzilient.club]
 
-  spec.summary       = "Ruby Vies gem"
-  spec.description   = "Vies is a EU sevice to validate Vat number"
+  spec.summary       = "Ruby EU VIES VAT and SIREN number validation"
+  spec.description   = "Vies is a EU service that checks EU VAT business number validation and sends back its information."
   spec.homepage      = "https://github.com/eddygarcas/ruby-miradore"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 2.4.0"
+  spec.required_ruby_version =  Gem::Requirement.new(">= 2.7.4")
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'https://mygemserver.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org/"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/eddygarcas/ruby-miradore"
-  spec.metadata["changelog_uri"] = "https://github.com/eddygarcas/ruby-miradore"
+  spec.metadata["source_code_uri"] = "https://github.com/eddygarcas/ruby-vies"
+  spec.metadata["changelog_uri"] = "https://github.com/eddygarcas/ruby-vies"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
