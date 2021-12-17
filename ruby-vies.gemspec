@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Ruby EU VIES VAT and SIREN number validation"
   spec.description   = "Vies is a EU service that checks EU VAT business number validation and sends back its information."
-  spec.homepage      = "https://github.com/eddygarcas/ruby-miradore"
+  spec.homepage      = "https://github.com/eddygarcas/ruby-vies"
   spec.license       = "MIT"
   spec.required_ruby_version =  Gem::Requirement.new(">= 2.7.4")
 
