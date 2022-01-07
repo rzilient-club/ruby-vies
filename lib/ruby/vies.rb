@@ -4,6 +4,7 @@ require_relative "vies/version"
 require "savon"
 require "httparty"
 require "finest/builder"
+require 'active_support/isolated_execution_state'
 require "active_support/core_ext/module"
 require "active_support/core_ext/object"
 
