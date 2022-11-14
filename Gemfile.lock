@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby-vies (0.2.1)
+    ruby-vies (2.0.0)
       activesupport (~> 7.0)
       finest-builder (~> 2.0)
       httparty (~> 0.18)
