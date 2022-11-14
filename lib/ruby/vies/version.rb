@@ -2,6 +2,6 @@
 
 module Ruby
   module Vies
-    VERSION = "0.1.1"
+    VERSION = "0.2.1"
   end
 end
