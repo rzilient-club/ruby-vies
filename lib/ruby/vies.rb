@@ -4,13 +4,24 @@ require_relative "vies/version"
 require "savon"
 require "httparty"
 require "finest/builder"
-require 'active_support/isolated_execution_state'
+require "active_support/isolated_execution_state"
+require "active_support/core_ext/hash/indifferent_access"
 require "active_support/core_ext/module"
 require "active_support/core_ext/object"
 
 module Ruby
   module Vies
     class Error < StandardError; end
+
+    mattr_accessor :endpoints, default: {
+      siren: "https://api.avis-situation-sirene.insee.fr/identification/siren/%<siren>s",
+      vat: "https://ec.europa.eu/taxation_customs/vies/services/checkVatService.wsdl"
+    }
+
+    # Setup data from initializer
+    def self.setup
+      yield(self)
+    end
 
     class Client
       include Savon
@@ -19,30 +30,30 @@ module Ruby
 
       mattr_reader :id_numbers, default: { FR: "((12 + 3 * ( %d.divmod(97)[1])).divmod(97)[1])" }
 
-      def initialize(args = {})
-        super args
+      def initialize(args = nil)
+        super args || {}
       end
 
-      def check_vat_details(args = {})
-        args[:country_code].upcase == "FR" ? check_siren(args) : check_vat(args)
-      rescue => e
+      def check_vat_details(args)
+        (args[:country_code].upcase == "FR" ? check_siren(args) : check_vat(args)).with_indifferent_access
+      rescue StandardError => e
         { error: e&.message, valid: false }
       end
 
       protected
 
-      def generate_id(vat = {})
+      def generate_id(vat)
         id_numbers[vat[:country_code].to_sym] &&
           "%02<digit>d%<vat>d" % {
             digit: eval(id_numbers[vat[:country_code].to_sym] % vat[:vat_number]),
             vat: vat[:vat_number]
           } || vat[:vat_number]
-      rescue
+      rescue StandardError
         vat[:vat_number]
       end
 
-      def check_vat(args = {})
-        Savon::Client.new(wsdl: "https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl")
+      def check_vat(args)
+        Savon::Client.new(wsdl: Ruby::Vies.endpoints[:vat])
                      .call(
                        :check_vat,
                        message: args.merge({ vat_number: generate_id(args) }).as_json.transform_keys! { |i| i.camelize(:lower) },
@@ -50,8 +61,8 @@ module Ruby
                      ).body[:check_vat_response].as_json(except: :@xmlns)
       end
 
-      def check_siren(args = {})
-        url = "https://api.avis-situation-sirene.insee.fr/identification/siren/#{args.fetch(:vat_number)}"
+      def check_siren(args)
+        url = Ruby::Vies.endpoints[:siren] % { siren: args.fetch(:vat_number) }
         if (resp = JSON.parse(self.class.method(:get).call(url).body))["code"]
           { error: resp["message"], valid: false }
         else
