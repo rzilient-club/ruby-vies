@@ -16,7 +16,7 @@ RSpec.describe Ruby::Vies do
     it "checks a valid VAT number" do
       resp = Ruby::Vies::Client.new.check_vat_details({ country_code: "FR", vat_number: "881969976" })
       expect(resp[:valid]).to(be(true))
-      expect(resp[:address]).to(eq(" 4  RUE DE LA REPUBLIQUE 69001 LYON 1ER   69381    "))
+      expect(resp[:address]).to(eq(""))
       expect(resp[:name]).to(eq("RZILIENT GROUP"))
       expect(resp[:vat_number]).to(be(nil))
     end

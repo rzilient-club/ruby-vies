@@ -14,9 +14,12 @@ module Ruby
     class Error < StandardError; end
 
     mattr_accessor :endpoints, default: {
-      siren: "https://api.avis-situation-sirene.insee.fr/identification/siren/%<siren>s",
+      siren: "https://api.insee.fr/entreprises/sirene/siren/%<siren>s",
+      siren_token: "https://api.insee.fr/token?grant_type=client_credentials&client_id=%<id>s&client_secret=%<secret>s&validity_period=%<period>s",
       vat: "https://ec.europa.eu/taxation_customs/vies/services/checkVatService.wsdl"
     }
+    mattr_accessor :customer_key, default: ENV["SIREN_CUSTOMER_KEY"]
+    mattr_accessor :customer_secret, default: ENV["SIREN_CUSTOMER_SECRET"]
 
     # Setup data from initializer
     def self.setup
@@ -63,20 +66,41 @@ module Ruby
 
       def check_siren(args)
         url = Ruby::Vies.endpoints[:siren] % { siren: args.fetch(:vat_number) }
-        if (resp = JSON.parse(self.class.method(:get).call(url).body))["code"]
-          { error: resp["message"], valid: false }
+        if (
+          resp = JSON.parse(
+            self.class.method(:get).call(
+              url,
+              headers: {
+                authorization: "Bearer #{siren_token}",
+                'Content-Type': 'application/json'
+              }
+            ).body
+          )
+        ).dig("header", "statut") != 200
+          { error: resp["header"]["message"], valid: false }
         else
           {
             valid: true,
             name: resp.dig("uniteLegale", "periodesUniteLegale")&.first&.dig("denominationUniteLegale"),
-            address: resp.dig("etablissements")&.first&.dig("adresseEtablissement").values.join(" "),
-            siren: resp.dig("etablissements")&.first&.dig("siren"),
-            siret: resp.dig("etablissements")&.first&.dig("siret"),
-            nic: resp.dig("etablissements")&.first&.dig("nic"),
-            created: resp.dig("etablissements")&.first&.dig("dateCreationEtablissement")
+            address: "",
+            siren: resp.dig("uniteLegale", "siren"),
+            siret: "",
+            nic: resp.dig("uniteLegale", "periodesUniteLegale")&.first&.dig("nicSiegeUniteLegale"),
+            created: resp.dig("uniteLegale", "periodesUniteLegale")&.first&.dig("dateDebut"),
           }
         end
+      end
 
+      private
+
+      def siren_token
+        url = Ruby::Vies.endpoints[:siren_token] % {
+          id: Ruby::Vies.customer_key,
+          secret: Ruby::Vies.customer_secret,
+          period: 604800
+        }
+        resp = self.class.method(:post).call(url)
+        JSON.parse(resp.body)["access_token"]
       end
     end
   end
