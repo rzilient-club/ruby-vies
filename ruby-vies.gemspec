@@ -10,15 +10,15 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Ruby EU VIES VAT and SIREN number validation"
   spec.description   = "Vies is a EU service that checks EU VAT business number validation and sends back its information."
-  spec.homepage      = "https://github.com/eddygarcas/ruby-vies"
+  spec.homepage      = "https://github.com/rzilient-club/ruby-vies"
   spec.license       = "MIT"
   spec.required_ruby_version =  Gem::Requirement.new(">= 3.1.2")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org/"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/eddygarcas/ruby-vies"
-  spec.metadata["changelog_uri"] = "https://github.com/eddygarcas/ruby-vies"
+  spec.metadata["source_code_uri"] = "https://github.com/rzilient-club/ruby-vies"
+  spec.metadata["changelog_uri"] = "https://github.com/rzilient-club/ruby-vies"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
