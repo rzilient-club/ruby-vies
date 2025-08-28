@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/ruby/vies/version"
+require_relative "lib/rz/vies/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "ruby-vies"
-  spec.version       = Ruby::Vies::VERSION
+  spec.version       = Rz::Vies::VERSION
   spec.authors       = ["Eduard Garcia Castelló"]
   spec.email         = %w[edugarcas@gmail.com eduard@rzilient.club]
 
@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Vies is a EU service that checks EU VAT business number validation and sends back its information."
   spec.homepage      = "https://github.com/rzilient-club/ruby-vies"
   spec.license       = "MIT"
-  spec.required_ruby_version =  Gem::Requirement.new(">= 3.1.2")
+  spec.required_ruby_version = Gem::Requirement.new(">= 3.4.5")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org/"
 
@@ -31,13 +31,13 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "activesupport", ">= 8.0"
   spec.add_dependency "finest-builder", "~> 2.0"
   spec.add_dependency "httparty", "~> 0.18"
   spec.add_dependency "rake", "~> 13.0"
   spec.add_dependency "rspec", "~> 3.0"
   spec.add_dependency "rubocop", "~> 1.7"
   spec.add_dependency "savon", "~> 2.3"
-  spec.add_dependency "activesupport", "~> 7.0"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

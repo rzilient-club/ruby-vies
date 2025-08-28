@@ -9,7 +9,7 @@ require "active_support/core_ext/hash/indifferent_access"
 require "active_support/core_ext/module"
 require "active_support/core_ext/object"
 
-module Ruby
+module Rz
   module Vies
     class Error < StandardError; end
 
@@ -56,7 +56,7 @@ module Ruby
       end
 
       def check_vat(args)
-        Savon::Client.new(wsdl: Ruby::Vies.endpoints[:vat])
+        Savon::Client.new(wsdl: Rz::Vies.endpoints[:vat])
                      .call(
                        :check_vat,
                        message: args.merge({ vat_number: generate_id(args) }).as_json.transform_keys! { |i| i.camelize(:lower) },
@@ -65,7 +65,7 @@ module Ruby
       end
 
       def check_siren(args)
-        url = Ruby::Vies.endpoints[:siren] % { siren: args.fetch(:vat_number) }
+        url = Rz::Vies.endpoints[:siren] % { siren: args.fetch(:vat_number) }
         if (
           resp = JSON.parse(
             self.class.method(:get).call(
@@ -94,9 +94,9 @@ module Ruby
       private
 
       def siren_token
-        url = Ruby::Vies.endpoints[:siren_token] % {
-          id: Ruby::Vies.customer_key,
-          secret: Ruby::Vies.customer_secret,
+        url = Rz::Vies.endpoints[:siren_token] % {
+          id: Rz::Vies.customer_key,
+          secret: Rz::Vies.customer_secret,
           period: 604800
         }
         resp = self.class.method(:post).call(url)
